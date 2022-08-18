@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+        <p> 總金額共 {{ subtotalMethods() }} 元 </p>
+        <p> 總金額共 {{ subtotalMethods() }} 元 </p>
+        <p> 總金額共 {{ subtotalMethods() }} 元 </p>
+        <p> 總金額共 {{ subtotalComputed }} 元 </p>
+        <p> 總金額共 {{ subtotalComputed }} 元 </p>
+        <p> 總金額共 {{ subtotalComputed }} 元 </p>
+    </div>
+</body>
+
+</html>
+<!-- Vue 3.0 -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    //Vue 2.x 的 Options-base 風格
+    const vm = Vue.createApp({
+        // template: `<div>{{ message }} 好棒棒!</div><div>aaaaaaa!</div>`,
+        data () {
+            return {
+                message: 'Hello Vue 2.x 的 Options-base 風格',
+                price: 100,
+                quantity: 10
+            }
+        },
+        methods: {
+            subtotalMethods: function() {
+                console.log('methods');
+                // return 100 * 100;
+                return this.price * this.quantity;
+            }
+        },
+        computed: {
+            subtotalComputed: function() {
+                console.log('computed');
+                // return 100 * 100;
+                return this.price * this.quantity;
+            }
+        }
+    });
+
+    vm.mount('#app');
+</script>
+
+<!--script>
+    // Vue 3.0 with Composition API Style
+    const { createApp, ref } = Vue;
+
+    const vm = createApp({
+        setup () {
+            const message = ref('Hello Vue 3.0 with Composition API Style!');
+            return {
+                message
+            }
+        }
+    });
+
+    vm.mount('#app');
+</script-->
+
+<!-- Vue 2.0 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<script>
+    // Vue 2.x 
+    const vm = new Vue({
+        data: {
+            message: 'Hello Vue 2.x'
+        }
+    });
+
+    vm.$mount('#app');
+</script>
+-->
+
+
