@@ -28,6 +28,35 @@
             <label for="two">Two</label>
         </div>
         <span>Picked: {{ picked }}</span>
+
+        <!-- 複選情境 注意下面 input 對應的都是 v-model="checkedNames"  -->
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        
+        <input type="checkbox" id="john" value="John" v-model="checkedNames">
+        <label for="john">John</label>
+        
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        
+        <input type="checkbox" id="mary" value="Mary" v-model="checkedNames">
+        <label for="mary">Mary</label>
+        <br>
+        <p>Checked names: {{ checkedNames }}</p>
+
+        <!-- 只有一個選項的情境 -->
+        <input type="checkbox" id="checkbox" v-model="isChecked">
+        <label for="checkbox">Status: {{ isChecked }}</label>
+
+        <h3>select 下拉列表選單</h3>
+        <!-- 注意，v-model 要放在 select 而不是 option -->
+        <select v-model="selected">
+            <option disabled value="">請選擇</option>
+            <option>台北市</option>
+            <option>新北市</option>
+            <option>基隆市</option>
+        </select>
+        <p>Selected: {{ selected || '未選擇' }}</p>
     </div>
 </body>
 </html>
@@ -40,7 +69,10 @@
             return {
                 isBtnDisabled: true,
                 message: 'Hello',
-                picked: 1
+                picked: 1,
+                checkedNames: ['Mary'],
+                isChecked: false,
+                selected: ''
             }
         },
     }).mount('#app');
