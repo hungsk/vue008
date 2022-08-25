@@ -18,9 +18,16 @@
         <textarea placeholder="add multiple lines">{{ message }}</textarea>
         <p>Message is: {{ message }}</p>
 
+        <h3>radio / checkbox 選擇框</h3>
         <div>
-            
+            <input type="radio" id="one" value="1" v-model="picked">
+            <label for="one">One</label>
         </div>
+        <div>
+            <input type="radio" id="one" value="2" v-model="picked">
+            <label for="two">Two</label>
+        </div>
+        <span>Picked: {{ picked }}</span>
     </div>
 </body>
 </html>
@@ -32,7 +39,8 @@
         data() {
             return {
                 isBtnDisabled: true,
-                message: 'Hello'
+                message: 'Hello',
+                picked: 1
             }
         },
     }).mount('#app');
