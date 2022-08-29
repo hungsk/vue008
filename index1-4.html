@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div id="app">
@@ -57,6 +58,43 @@
             <option>基隆市</option>
         </select>
         <p>Selected: {{ selected || '未選擇' }}</p>
+
+        <h3>v-model 與修飾子.lazy 事件改為監聽 change 事件</h3>
+        <input v-model.lazy="message" placeholder="edit me">
+        <p>Message with ".lazy" : {{ message }}</p>
+
+        <h3>v-model 與修飾子.number 預設字串改為數字</h3>
+        <input v-model.number="num1"> + 
+        <input v-model.number="num2"> = {{ sum }}
+
+        <h3>v-model 與修飾子.trim 字串去空白</h3>
+        <input v-model.trim="message" placeholder="edit me">
+        <p>Message with ".trim" is: {{ message }}</p>
+
+        <h3>模板綁定 v-text / v-html / v-once / v-pre</h3>
+        <p>v-text 指令渲染的結果會無視標籤內原本的內容</p>
+        <div v-text="text">World!</div>
+        <div>{{ text }} World!</div>
+
+        <h3>v-html v-text 以及兩組大括號{{}}, HTML字串而不會被渲染</h3>
+        <div v-html="text"></div>
+
+        <h3>v-once 只會渲染指定的節點一次,往後就不再更新</h3>
+        <div v-once>{{ text }}</div>
+
+        <h3>v-pre 後不會解析模板內容</h3>
+        <div v-pre>{{ text }}</div>
+
+        <h3>樣式綁定</h3>
+        <input type="text" 
+            v-model.trim="message" 
+            placeholder="請勿超過十個字"
+            v-bind:class="{ 'error': message.length > 10 }">
+        <input type="text" 
+            v-model.trim="message" 
+            placeholder="請勿超過十個字"
+            v-bind:style="msgStyle">            
+
     </div>
 </body>
 </html>
@@ -72,8 +110,25 @@
                 picked: 1,
                 checkedNames: ['Mary'],
                 isChecked: false,
-                selected: ''
+                selected: '',
+                num1: 0,
+                num2: 0,
+                text: '<h1>HELLO</h1>'    
             }
         },
+        computed: {
+            sum() {
+                return this.num1 + this.num2;
+            },
+            isVaild: function() {
+                return this.message.length <= 10;
+            },
+            msgStyle: function() {
+                return {
+                    'border': this.isVaild ? '' : 'red solid 1px',
+                    'color': this.isVaild ? '' : 'red'
+                };
+            }
+        }
     }).mount('#app');
 </script>
