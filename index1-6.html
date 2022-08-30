@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h3>條件判斷與列表渲染</h3>
+        <p>v-show 是透過 CSS 的 display: none 來將元素隱藏</p>
+        <p>v-if 元素會直接被移除</p>
+        <P>連續元素都出現 v-else 指令,會有錯誤，可改用template處理</P>
+        <label>
+            <input type="checkbox" v-model="isShow"> isShow: {{ isShow }}
+        </label>
+
+        <div class="wrap">
+            <div v-if="isShow"> V-if </div>
+            <div v-show="isShow"> V-show </div>
+        </div>
+
+        <h3>v-if v-else-if v-else</h3>
+        <h4>count: {{ count }}</h4>
+        <button @click="count++">Plus</button>
+        <button @click="count = 0">Reset</button>
+        <div class="wrap">
+            <div v-if="count === 0" style="background-color: #f00;">Block A</div>
+            <div v-else-if="count < 5" style="background-color: green">Block B</div>
+            <div v-else style="background-color: #00f;">Block C</div>
+        </div>
+
+        <h3>v-if 與 key 屬性</h3>
+        <p>Vue.js 為了提高網頁渲染的效率，在預設情況下會選擇重複利用已經存在的元素而不是重新渲染,若我們想排除這個問題，只需要針對不同的表單元素加上 key</p>
+        <p>DOM (或元件) 的狀態需要被保留，且狀態可能頻繁更動時，用 v-show 會比 v-if 更適合</p>
+
+        <h3>v-for 列表渲染</h3>
+        <p>v-for 與陣列</p>
+        <ul>
+            <li v-for="item in arr">{{ item }}</li>
+        </ul>
+        <ul>
+            <li v-for="(item, index) in arr">{{ index }} / {{ item }}</li>
+        </ul>
+
+        <p>v-for 與物件</p>
+        <ul>
+            <li v-for="(val, key, index) in book"> {{ index }} /{{ key }} / {{ val }}</li>
+        </ul>
+
+        <p>v-for 與範圍</p>
+        <ul class="pagination">
+            <li class="page-item" @click.prevent><a class="page-link" href>&lt;</a></li>
+            <li class="page-item" v-for="page in 10" @click.prevent>
+                <a class="page-link" href>{{ page }}</a>
+            </li>
+            <li class="page-item" @click.prevent><a class="page-link" href>&gt;</a></li>
+        </ul>
+
+        <p>v-for 與 template</p>
+        <div class="dropdown-menu">
+            <template v-for="i in links">
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" :href="i.link">i.title</a>
+            </template>
+        </div>
+
+        <p>v-for 列表的排序與過濾-透過前面章節介紹過的 computed 或 methods 屬性來產生對應的新陣列</p>
+
+        <p>v-for做到為了效能最佳化，會把已經渲染至畫面的 DOM 節點拿來重複利用，可以不建議使用 index 當作 key，只要加個「唯一的」 key 屬性作為識別，即可確保畫面的重新渲染</p>
+
+        <div class="todo-lists">
+            <h3>Todo List</h3>
+            <ul>
+                <li v-for="i in todoLists" :key="i.id">
+                    <label><input v-model="i.isDone" type="checkbox"> {{ i.title }}</label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="done-lists">
+            <h3>Done List</h3>
+            <ul>
+                <li v-for="i in doneLists" :key="i.id">
+                    <label><input v-model="i.isDone" type="checkbox"> {{ i.title }}</label>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</body>
+
+</html>
+<!-- Vue 3.0 -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    const vm = Vue.createApp({
+        data: () => {
+            return {
+                isShow: true,
+                count: 0,
+                arr: ['008', 'JS', 'is', 'awesome'],
+                book: {
+                    title: '08js',
+                    author: 'Kuro',
+                    publishedAt: '2019/09'
+                },
+                lists: [{
+                    id: 'task001',
+                    title: '選項 1',
+                    isDone: false
+                },
+                {
+                    id: 'task002',
+                    title: '選項 2',
+                    isDone: false
+                },
+                {
+                    id: 'task003',
+                    title: '選項 3',
+                    isDone: false
+                },
+                ]
+            }
+        },
+        computed: {
+            todoLists() {
+                return this.lists.filter(d => !d.isDone)
+            },
+            doneLists() {
+                return this.lists.filter(d => d.isDone)
+            },
+        }
+    }).mount('#app');
+</script>
