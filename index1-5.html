@@ -5,10 +5,152 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    
+    <div id="app">
+        <h3>事件綁定 v-on</h3>
+        <!-- 模板裡無需加上 this -->
+        <!-- 可簡寫成 @事件名稱="運算式" -->
+        <p>Count: {{ count }}</p>
+        <button v-on:click="count++">Plus 模板</button>
+        <button v-on:click="plus">Plus Method</button>
+
+        <h3>v-on 與 event 物件</h3>
+        <p>預設就會將 event 物件當作參數傳入</p>
+        <button v-on:click="plus">Plus</button>
+
+        <h3>v-on 與修飾子 .stop .prevent .capture .self .once .passive</h3>
+        <p>多個修飾子時，前面的會優先權高，順序會影響執行的結果。</p>
+
+        <h3>.stop 阻擋事件冒泡</h3>
+        <div class="p" v-show="msg.length > 0">
+            <div v-for="m in msg">{{ m }}</div>
+        </div>
+        <p>click without stopPropagation</p>
+        <div class="outer" @click="alert('Outer')">
+          <span>Outer</span>
+          <div class="inner" @click="alert('Inner')">Inner</div>
+        </div>
+        <p>click with stopPropagation</p>
+        <div class="outer" @click="alert('Outer')">
+          <span>Outer</span>
+          <div class="inner" @click.stop="alert('Inner')">Inner</div>
+        </div>
+
+        <h3>.prevent 阻擋元素的預設行為</h3>
+        <a href="#" class="btn" @click.prevent="alert('Hello!')">click me!</a> 
+        <a href="#" class="btn" @click.stop.prevent="alert('Hello!')">click me!</a>
+
+        <h3>.capture 指定事件 會先觸發 inner 的 click 事件再觸發 outer</h3>
+        <div class="outer" @click.capture="alert('Outer')">
+            <span>Outer</span>
+            <div class="inner" @click="alert('Inner')">Inner</div>
+        </div>
+
+        <h3>.self 只會觸發元素自己的事件行為，由子層元素傳遞來的事件則不會觸發</h3>
+        <div class="modal-mask" :style="modalStyle">
+            <div class="modal-container" @click.self="toggleModal">
+              <div class="modal-body">Hello!</div>
+            </div>
+          </div>
+        <button @click="isShow = true">Click Me</button>
+
+        <p>.once</p>
+        <p>Count: {{ count }}</p>
+        <button @click.once="plus">Plus Once</button>
+
+        <h3>.passive 告訴瀏覽器這個事件處理器會不會呼叫 event.preventDefault 來停止瀏覽器的原生行為</h3>
+        <!-- <div @scroll.passive="onScroll">...</div> -->
+
+        <h3>鍵盤修飾子 event.key</h3>
+        <p>.exact 精確判斷 各種組合熱鍵判斷使用</p>
+        <p> .enter 
+            .tab 
+            .delete (包含 del 與 backspace 鍵) 
+            .esc
+            .space
+            .up
+            .down
+            .left
+            .right
+            .ctrl
+            .alt
+            .shift
+            .meta
+        </p>
+        <div class="messages">
+            <div v-for="m in messages">{{ m }}</div>
+        </div>
+        <input type="text" 
+            placeholder="輸入任意文字後按下 enter 鍵"
+            v-model.trim="msg" 
+            @keydown.enter="addToMessages">
+
+        <input type="text" 
+            placeholder="輸入任意文字後，試試同時按下 Ctrl + Enter 鍵與只按 Enter 的差異"
+            v-model.trim="msg" 
+            @keydown.enter.exact="addToMessages">            
+
+        <h3>滑鼠修飾子</h3>
+        <p>
+            .left
+            .right
+            .middle
+        </p>
+
+        <h3>拆解 v-model 的黑魔法</h3>
+        <p>表單元素input的v-model 等於 v-bind:value="msg" 加上 v-on:input="msg = $event.target.value"</p>
+        <p>MVVM 示意圖裡頭的 ViewModel 做的事情，就是 v-model 在做的事</p>
+
+
+    </div>
 </body>
 </html>
 <!-- Vue 3.0 -->
 <script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    const vm = Vue.createApp({
+        data() {
+            return {
+                count: 0,
+                msg: [],
+                isShow: false,
+                messages: []
+            }
+        },
+        computed: {
+            modalStyle() {
+                return {
+                    'display': this.isShow ? '' : 'none'
+                };
+            }
+        },
+        methods: {
+            plus () {
+                this.count++;
+            },
+            plus (event) {
+                this.count++;
+                 // "BUTTON"
+                console.log(event.target.tagName);
+            },
+            alert(val){
+                this.msg.push(val);
+                //3秒後自動清空
+                // window.setTimeout(() => {
+                //     this.msg = [];
+                // }, 3000);
+            },
+            toggleModal() {
+                this.isShow = !this.isShow;
+            },
+            addToMessages() {
+                this.messages.push(this.msg);
+                this.msg = '';
+            }
+        }
+    }).mount('#app');
+</script>
+
