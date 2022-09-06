@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <label v-for="opt in options">
+            <input type="radio" :value="opt" v-model="dynamic_slot_name"> {{ opt }}
+        </label>
+
+        <light-box>
+            <template v-slot:[dynamic_slot_name]>
+                <h2>008JS 好棒棒!</h2>
+            </template>
+        </light-box>
+    </div>
+</body>
+
+</html>
+<!-- Vue 3.0 -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                options: ['header', 'footer', 'default'],
+                dynamic_slot_name: 'header'
+            }
+        }
+    });
+
+    app.component('light-box', {
+        template: `
+  <div class="lightbox">
+    <div class="modal-mask" :style="modalStyle">
+      <div class="modal-container"  @click.self="toggleModal">
+
+        <div class="modal-body">
+          <header>
+            <slot name="header">Default Header</slot>
+          </header>
+          <hr>
+          <main>
+            <slot>Default Body</slot>
+          </main>
+          <hr>
+          <footer>
+            <slot name="footer">Default Footer</slot>
+          </footer>
+        </div>
+
+      </div>
+    </div>
+
+    <button @click="isShow = true">Click Me</button>
+  </div>`,
+        data: () => ({
+            isShow: false
+        }),
+        computed: {
+            modalStyle() {
+                return {
+                    'display': this.isShow ? '' : 'none'
+                };
+            }
+        },
+        methods: {
+            toggleModal() {
+                this.isShow = !this.isShow;
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>

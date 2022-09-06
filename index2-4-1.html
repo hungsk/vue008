@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>#header和v-slot:header效果一樣</p>
+        <p>v-slot 只能與 template標籤搭配使用。</p>
+        <light-box>
+            <template v-slot:header>
+                <h2>008JS 好棒棒!</h2>
+            </template>
+
+            <template v-slot:footer>
+                <h2>大家快來買！</h2>
+            </template>
+
+            <div>
+                <a target="_blank" href="https://www.tenlong.com.tw/products/9789864344130">購書傳送門</a>
+            </div>
+        </light-box>
+    </div>
+</body>
+
+</html>
+<!-- Vue 3.0 -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    const app = Vue.createApp({});
+
+    app.component('light-box', {
+        template: `
+  <div class="lightbox">
+    <div class="modal-mask" :style="modalStyle">
+      <div class="modal-container"  @click.self="toggleModal">
+
+        <div class="modal-body">
+          <header>
+            <slot name="header">Default Header</slot>
+          </header>
+          <hr>
+          <main>
+            <slot>Default Body</slot>
+          </main>
+          <hr>
+          <footer>
+            <slot name="footer">Default Footer</slot>
+          </footer>
+        </div>
+
+      </div>
+    </div>
+
+    <button @click="isShow = true">Click Me</button>
+  </div>`,
+        data: () => ({
+            isShow: false
+        }),
+        computed: {
+            modalStyle() {
+                return {
+                    'display': this.isShow ? '' : 'none'
+                };
+            }
+        },
+        methods: {
+            toggleModal() {
+                console.log('click')
+                this.isShow = !this.isShow;
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>

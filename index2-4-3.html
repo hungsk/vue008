@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>
+            請選擇:
+            <select v-model="lang">
+                <option v-for="n in langOptions" :value="n.val">
+                    {{ n.name }}
+                </option>
+            </select>
+        </p>
+
+        <light-box :lang="lang">
+            {{ langOptions.find(d => d.val === lang)['name'] }}
+        </light-box>
+
+        <p>teleport的作用是可以將模板中特定的 DOM 移動至我們所指定的位置渲染</p>
+    </div>
+</body>
+
+</html>
+<!-- Vue 3.0 -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    const app = Vue.createApp({
+        data: () => ({
+            langOptions: [{
+                name: '繁體中文',
+                val: 'tw'
+            },
+            {
+                name: '日本語',
+                val: 'jp'
+            },
+            {
+                name: 'English',
+                val: 'en'
+            },
+            ],
+            lang: 'tw'
+        })
+    });
+
+    app.component('light-box', {
+        template: `
+    <div class="lightbox">
+      <div class="modal-mask" :style="modalStyle">
+        <div class="modal-container" @click.self="toggleModal">
+          <div class="modal-body">
+            <main>
+              <slot name="default"></slot>
+            </main>
+          </div>
+        </div>
+      </div>
+
+      <button @click="isShow = true">Click Me</button>
+    </div>`,
+        props: {
+            lang: {
+                type: String,
+                default: 'tw'
+            }
+        },
+        data: () => ({
+            helloString: {
+                'tw': '哈囉！世界！',
+                'jp': 'ハロー・ワールド!',
+                'en': 'Hello world!'
+            },
+            isShow: false
+        }),
+        computed: {
+            modalStyle() {
+                return {
+                    'display': this.isShow ? '' : 'none'
+                };
+            }
+        },
+        methods: {
+            toggleModal() {
+                console.log('click')
+                this.isShow = !this.isShow;
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
