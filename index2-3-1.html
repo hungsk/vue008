@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <button
+           v-for="tab in tabs"
+           :key="tab"
+           :class="['tab-button', { active: currentTab === tab }]"
+           @click="currentTab = tab">
+          {{ tab }}
+        </button>
+        <p>v-if更新的內容並不會被留存,可改為 v-show或keep-alive</p>
+        <component :is="currentTabComponent"></component>
+
+        <p>keep-alive暫存保留元件當下的狀態</p>
+        <keep-alive>
+            <component :is="currentTabComponent"></component>
+        </keep-alive>
+        <p>include 、 exclude 與 max 屬性針對某部分的子元件進行暫存快取 (或排除某些子元件不要 keep-alive)</p>
+      </div>
+</body>
+
+</html>
+<!-- Vue 3.0 -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                currentTab: 'Home',
+                tabs: ['Home', 'Posts', 'Archive']
+            }
+        },
+        computed: {
+            currentTabComponent() {
+                return `tab-${this.currentTab.toLowerCase()}`;
+            }
+        }
+    });
+
+    app.component('tab-home', {
+        template: `<div class="demo-tab"><input v-model="title"></div>`,
+        data: () => ({ title: 'Home component' })
+    });
+
+    app.component('tab-posts', {
+        template: `<div class="demo-tab"><input v-model="title"></div>`,
+        data: () => ({ title: 'Post component' })
+    });
+
+    app.component('tab-archive', {
+        template: `<div class="demo-tab"><input v-model="title"></div>`,
+        data: () => ({ title: 'Archive component' })
+    });
+
+    app.mount('#app');
+</script>
